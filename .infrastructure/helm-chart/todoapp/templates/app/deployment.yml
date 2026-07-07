@@ -41,13 +41,13 @@ spec:
         - name: PYTHONUNBUFFERED
           valueFrom:
             configMapKeyRef:
-              name: todoapp-config
+              name: {{ .Chart.Name }}-config
               key: PYTHONUNBUFFERED
         {{- range $k, $v:= .Values.secrets }}
         - name: {{ $k }}
           valueFrom:
             secretKeyRef:
-              name: todoapp-secret
+              name: {{ $.Chart.Name }}-secret
               key: {{ $k }}
         {{- end }}
         ports:
