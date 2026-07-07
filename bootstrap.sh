@@ -5,6 +5,8 @@ kind create cluster --config cluster.yml --wait 90s
 
 kubectl taint nodes -l app=mysql app=mysql:NoSchedule
 
+kubectl get nodes -o custom-columns=NAME:.metadata.name,LABELS:.metadata.labels,TAINTS:.spec.taints
+
 kubectl apply -f metrics.yml
 
 kubectl wait --namespace kube-system \

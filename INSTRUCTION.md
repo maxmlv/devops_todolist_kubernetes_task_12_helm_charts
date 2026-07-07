@@ -71,7 +71,7 @@ Expect `MINPODS: 2`, `MAXPODS: 5`, with current CPU/memory usage reported (not `
 ## 7. Verify MySQL connectivity from the app
 
 ```bash
-kubectl exec -n todoapp deploy/todoapp -- printenv | grep DB_
+kubectl exec -n todoapp deploy/todoapp-deployment -- printenv | grep DB_
 ```
 
 Confirm the expected environment variables (e.g. `DB_PASSWORD`) are populated from the Secret (values will appear base64-decoded, as real strings, not raw base64).
