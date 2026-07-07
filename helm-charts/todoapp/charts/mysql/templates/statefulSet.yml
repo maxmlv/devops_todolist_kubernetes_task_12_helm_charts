@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mysql
-  namespace: mysql
+  name: {{ .Chart.Name }}
+  namespace: {{ .Values.common.namespace }}
 spec:
   selector:
     matchLabels:
       app: mysql
-  replicas: 2
+  replicas: {{ .Values.statefulSet.replicas }}
   serviceName: mysql
   template:
     metadata:
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: mysql:8.0
+        image: "{{ .Values.statefulSet.image.repo }}:{{ .Values.statefulSet.image.tag }}"
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
@@ -46,8 +46,8 @@ spec:
           mountPath: /docker-entrypoint-initdb.d
         resources:
           requests:
-            cpu: 500m
-            memory: 1Gi
+            cpu: {{ .Values.statefulSet.resources.requests.cpu }}
+            memory: {{ .Values.statefulSet.resources.requests.memory }}
         livenessProbe:
           exec:
             command: ["mysqladmin", "ping"]
@@ -63,30 +63,30 @@ spec:
       volumes:
       - name: config-map
         configMap:
-          name: mysql
+          name: {{ .Chart.Name }}-config
       tolerations:
-      - key: "app"
+      - key: {{ .Values.statefulSet.tolerations.key }}
         operator: "Equal"
-        value: "mysql"
+        value: {{ .Values.statefulSet.tolerations.value }}
         effect: "NoSchedule"
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchExpressions:
-                  - key: "app"
+                  - key: {{ .Values.statefulSet.affinity.key }}
                     operator: In
                     values:
-                    - mysql
+                    - {{ .Values.statefulSet.affinity.value }}
               topologyKey: "kubernetes.io/hostname"
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: "app"
+                  - key: {{ .Values.statefulSet.affinity.key }}
                     operator: In
                     values:
-                    - "mysql"
+                    - {{ .Values.statefulSet.affinity.value }}
   volumeClaimTemplates:
   - metadata:
       name: data
@@ -94,4 +94,4 @@ spec:
       accessModes: ["ReadWriteOnce"]
       resources:
         requests:
-          storage: 2Gi
+          storage: {{ .Values.statefulSet.pvc.requests }}
