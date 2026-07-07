@@ -33,7 +33,7 @@ hpa:
   memoryUtilization: 70
 
 pv:
-  capasity: 1Gi
+  capacity: 1Gi
 
 pvc:
   requests: 1Gi

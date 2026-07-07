@@ -3,6 +3,8 @@
 # Create the kind cluster and wait for it to come up
 kind create cluster --config cluster.yml --wait 90s
 
+kubectl taint nodes -l app=mysql app=mysql:NoSchedule
+
 kubectl apply -f metrics.yml
 
 kubectl wait --namespace kube-system \
@@ -25,4 +27,4 @@ kubectl wait --namespace ingress-nginx \
   --selector=app.kubernetes.io/component=controller \
   --timeout=120s
 
-helm upgrade --install todoapp ./helm-charts/todoapp --wait
+helm upgrade --install todoapp ./.infrastructure/helm-charts/todoapp --wait

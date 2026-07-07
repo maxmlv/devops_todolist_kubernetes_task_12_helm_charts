@@ -7,8 +7,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: {{ .Values.deployment.rollingUpdate.maxSurge}}
-      maxUnavailable: {{ .Values.deployment.rollingUpdate.maxUnavailable}}
+      maxSurge: {{ .Values.deployment.rollingUpdate.maxSurge }}
+      maxUnavailable: {{ .Values.deployment.rollingUpdate.maxUnavailable }}
   selector:
     matchLabels:
       app: todoapp
@@ -32,18 +32,18 @@ spec:
           readOnly: true
         resources:
           requests:
-            memory: {{ .Values.deployment.resources.requests.memory}}
-            cpu: {{ .Values.deployment.resources.requests.cpu}}
+            memory: {{ .Values.deployment.resources.requests.memory }}
+            cpu: {{ .Values.deployment.resources.requests.cpu }}
           limits:
-            memory: {{ .Values.deployment.resources.limits.memory}}
-            cpu: {{ .Values.deployment.resources.limits.cpu}}
+            memory: {{ .Values.deployment.resources.limits.memory }}
+            cpu: {{ .Values.deployment.resources.limits.cpu }}
         env:
         - name: PYTHONUNBUFFERED
           valueFrom:
             configMapKeyRef:
               name: todoapp-config
               key: PYTHONUNBUFFERED
-        {{- range $k, $v:= .Values.secrets}}
+        {{- range $k, $v:= .Values.secrets }}
         - name: {{ $k }}
           valueFrom:
             secretKeyRef:
@@ -73,7 +73,7 @@ spec:
           secretName: {{ .Chart.Name }}-secret
       - name: app-config-volume
         configMap:
-          name: {{ .Chart.Name}}-config
+          name: {{ .Chart.Name }}-config
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
